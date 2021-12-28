@@ -45,7 +45,7 @@ exports.create_Job = async (req, res, next) => {
         statusCode: 500,
         errorMessage: err,
       },
-      message: "Error occured while trying to create a new Job.",
+      message: "Error occurred while trying to create a new Job.",
     });
   }
 };

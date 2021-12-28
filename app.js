@@ -39,6 +39,8 @@ app.use("/admin", adminRoutes);
 app.use("/jobs", require("./api/routes/jobs"));
 app.use("/users", require("./api/routes/users"));
 app.use("/jobApplication", require("./api/routes/candidates"));
+app.use("/login", require("./api/routes/login"));
+app.use("/sendEmail", require("./api/routes/contact"));
 app.use(upload.array());
 
 app.use((req, res, next) => {

@@ -116,8 +116,6 @@ exports.ChangeApplicantStatus = async (req, res, next) => {
   try {
     const { status, jobID, candidateID } = req.body;
 
-    console.log("asdasd");
-
     await candidateModel
       .updateMany({ candidateID, jobID }, { $set: { status } })
       .exec();
@@ -151,6 +149,80 @@ exports.getAllCandidates = async (req, res, next) => {
       request: {
         type: "GET",
         URL: "http://localhost:5000/jobApplication/",
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: {
+        status: "Failed",
+        statusCode: 500,
+        errorMessage: err,
+      },
+      message: "Error occured while trying to get all applicants.",
+    });
+  }
+};
+
+exports.getCandidatesCountByJob = async (req, res, next) => {
+  try {
+    const candidates = await candidateModel.find().populate("jobID").exec();
+    let cand = {};
+    for (let i = 0; i < candidates.length; i++) {
+      if (cand.hasOwnProperty(`${candidates[i].jobID._id}`)) {
+        cand[`${candidates[i].jobID._id}`].candidates.push(candidates[i]);
+      } else {
+        cand[`${candidates[i].jobID._id}`] = {
+          jobId: candidates[i].jobID._id,
+          jobName: candidates[i].jobID.name,
+          jobDescription: candidates[i].jobID.description,
+          candidates: [candidates[i]],
+        };
+      }
+    }
+    return res.status(200).json({
+      message: "All CandidatesCountByJob Returned",
+      candidates: cand,
+      request: {
+        type: "GET",
+        URL: "http://localhost:5000/jobApplication/ByJob",
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: {
+        status: "Failed",
+        statusCode: 500,
+        errorMessage: err,
+      },
+      message: "Error occured while trying to get all applicants.",
+    });
+  }
+};
+
+exports.getCandidatesByJob = async (req, res, next) => {
+  try {
+    const candidates = await candidateModel
+      .find({ jobID: req.params.JobID })
+      .exec();
+    // let cand = {};
+    // for (let i = 0; i < candidates.length; i++) {
+    //   if (cand.hasOwnProperty(`${candidates[i].jobID._id}`)) {
+    //     cand[`${candidates[i].jobID._id}`].candidates.push(candidates[i]);
+    //   } else {
+    //     cand[`${candidates[i].jobID._id}`] = {
+    //       jobId: candidates[i].jobID._id,
+    //       jobName: candidates[i].jobID.name,
+    //       jobDescription: candidates[i].jobID.description,
+    //       candidates: [candidates[i]],
+    //     };
+    //   }
+    // }
+    return res.status(200).json({
+      message: "All Candidates By Job Returned",
+      candidates,
+      request: {
+        type: "GET",
+        URL: "http://localhost:5000/jobApplication/ByJob/:jobID",
       },
     });
   } catch (err) {

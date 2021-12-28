@@ -127,8 +127,9 @@ exports.userLogIn = async (req, res, next) => {
       .findOne({ email: req.body.email })
       .select("name email _id password")
       .exec();
+    console.log(userDoc);
 
-    if (adminDoc) {
+    if (userDoc) {
       bcrypt.compare(req.body.password, userDoc.password, (err, result) => {
         if (err) {
           return res.status(401).json({

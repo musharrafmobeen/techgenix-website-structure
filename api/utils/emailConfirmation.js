@@ -41,7 +41,7 @@ const emailVerification = async (email, verificationId) => {
     from: "TechGenix",
     to: email,
     subject: "Email Verification",
-    html: `<p>Click Here To Verify Email <a href="http://localhost:5000/users/verifyUser/${verificationId}"> ${stringVerificationId} </a></p>`,
+    html: `<p>Click Here To Verify Email <a href="http://192.168.18.42:5000/users/verifyUser/${verificationId}"> ${stringVerificationId} </a></p>`,
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
@@ -68,7 +68,36 @@ const emailUpdatePassword = async (email) => {
     from: "Ineffable",
     to: email,
     subject: "Email Verification",
-    html: `<p>Click Here To Update Password <a href="http://localhost:5000/forgotPassword/${email}"> ${stringVerificationId} </a></p>`,
+    html: `<p>Click Here To Update Password <a href="http://192.168.18.42:5000/forgotPassword/${email}"> ${stringVerificationId} </a></p>`,
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
+};
+
+const sendEmail = async (name, subject, text) => {
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "contactus@techgenix.com.pk",
+      pass: process.env.GMAIL_PASS,
+    },
+  });
+
+  var mailOptions = {
+    from: name,
+    to: [
+      "a.syed@techgenix.com.pk",
+      "o.usman@techgenix.com.pk",
+      "umer27@gmail.com",
+    ],
+    subject: subject,
+    text: text,
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
@@ -84,4 +113,5 @@ module.exports = {
   sendEmailConfirmation,
   emailVerification,
   emailUpdatePassword,
+  sendEmail,
 };

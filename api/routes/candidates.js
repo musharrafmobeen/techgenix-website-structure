@@ -17,6 +17,8 @@ router.get(
   candidateControllers.getInProgressCandidates
 );
 router.get("/", candidateControllers.getAllCandidates);
+router.get("/ByJob", candidateControllers.getCandidatesCountByJob);
+router.get("/ByJob/:JobID", candidateControllers.getCandidatesByJob);
 router.get("/status/:candidateID", candidateControllers.getCandidatesStatus);
 router.get("/:candidateID", candidateControllers.getCandidatesAppliedJobs);
 router.patch("/status", candidateControllers.ChangeApplicantStatus);

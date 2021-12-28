@@ -136,6 +136,8 @@ exports.Admin_Log_In = async (req, res, next) => {
       .select("name email _id password")
       .exec();
 
+    console.log(adminDoc);
+
     if (adminDoc) {
       bcrypt.compare(req.body.password, adminDoc.password, (err, result) => {
         if (err) {
@@ -168,7 +170,7 @@ exports.Admin_Log_In = async (req, res, next) => {
           );
 
           return res.status(200).json({
-            admin: adminDoc,
+            user: adminDoc,
             token,
             request: {
               type: "POST",
@@ -186,11 +188,7 @@ exports.Admin_Log_In = async (req, res, next) => {
         });
       });
     } else {
-      return res.status(404).json({
-        status: "Admin Not Found",
-        statusCode: 404,
-        message: "No admin found with the given credentials.",
-      });
+      return false;
     }
   } catch (err) {
     return res.status(500).json({
